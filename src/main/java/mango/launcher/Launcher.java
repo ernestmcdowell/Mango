@@ -9,10 +9,11 @@ public class Launcher {
     private static WindowManager window;
     private static TestGame game;
     private static ImGuiLayer imGuiLayer;
+    private static int width = 3440, height = 2160;
 
     public static void main(String[] args) {
         System.out.println(Version.getVersion());
-        window = new WindowManager(Consts.TITLE, 1920, 1080, false, new ImGuiLayer());
+        window = new WindowManager(Consts.TITLE, width, height, false, new ImGuiLayer());
         game =  new TestGame();
         EngineManager engine = new EngineManager();
 

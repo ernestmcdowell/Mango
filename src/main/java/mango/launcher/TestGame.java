@@ -144,6 +144,8 @@ public class TestGame implements ILogic {
 
     @Override
     public void update(float interval, MouseManager mouse) {
+        Framebuffer framebuffer = window.getFramebuffer();
+        framebuffer.bind();
         camera.movePosition(cameraInc.x * Consts.CAMERA_STEP, cameraInc.y * Consts.CAMERA_STEP,
                 cameraInc.z * Consts.CAMERA_STEP);
 
@@ -194,7 +196,6 @@ public class TestGame implements ILogic {
         for(Terrain terrain : sceneManager.getTerrains()){
             renderer.processTerrain(terrain);
         }
-
     }
 
     @Override

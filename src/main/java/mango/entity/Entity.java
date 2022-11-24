@@ -1,6 +1,9 @@
 package mango.entity;
 
+import imgui.ImGui;
 import org.joml.Vector3f;
+
+import java.lang.reflect.Field;
 
 public class Entity {
 
@@ -70,5 +73,26 @@ public class Entity {
 
     public void setScale(float scale) {
         this.scale = scale;
+    }
+
+    public void imgui(){
+        try {
+            Field[] fields = this.getClass().getDeclaredFields();
+            for (Field field : fields){
+                Class type = field.getType();
+                Object value = field.get(this);
+                String name = field.getName();
+
+                if(type == int.class){
+                    int val = (int) value;
+                    int[] imInt = { val };
+                    if(ImGui.dragInt(name + ": ", imInt)){
+                        field.set(this, imInt[0]);
+                    }
+                }
+            }
+        } catch (IllegalAccessException e){
+            e.printStackTrace();
+        }
     }
 }

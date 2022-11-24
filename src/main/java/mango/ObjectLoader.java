@@ -1,5 +1,6 @@
 package mango;
 import mango.entity.Model;
+import mango.entity.Texture;
 import mango.utils.Utils;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -17,8 +18,13 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.lwjgl.opengl.GL11.*;
+
 public class ObjectLoader {
 
+    private Texture texture;
+    private String filepath;
+    private int id;
     private List<Integer> vaos = new ArrayList<>();
     private List<Integer> vbos = new ArrayList<>();
     private List<Integer> textures = new ArrayList<>();
@@ -203,5 +209,16 @@ public class ObjectLoader {
             GL30.glDeleteVertexArrays(vbo);
         for (int texture : textures )
             GL11.glDeleteTextures(texture);
+    }
+
+    public int setTexture(int width, int height){
+        this.filepath = "Generated";
+        id = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, id);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+
+        return id;
     }
 }

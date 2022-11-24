@@ -6,6 +6,8 @@ import imgui.flag.*;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.type.ImBoolean;
+import mango.editor.GameViewWindow;
+import mango.launcher.TestGame;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
@@ -16,9 +18,9 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryUtil;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.Platform.get;
 
 public class WindowManager {
 
@@ -36,6 +38,7 @@ public class WindowManager {
     private long window;
     private boolean resize, vSync;
     private ImGuiLayer imGuiLayer;
+    Framebuffer framebuffer;
 
     private final Matrix4f projectionmatrix;
 
@@ -54,6 +57,7 @@ public class WindowManager {
         imGuiGlfw.init(window, true);
         imGuiGl3.init(glslVersion);
         glfwSetErrorCallback(null).free();
+
 
     }
 
@@ -75,7 +79,7 @@ public class WindowManager {
         GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
         GLFW.glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
 
-        boolean maximised = false;
+        boolean maximised = true;
 
         if (width == 0 || height == 0) {
             width = 100;
@@ -100,6 +104,7 @@ public class WindowManager {
             if (key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE)
                 GLFW.glfwSetWindowShouldClose(window, true);
         });
+
         if (maximised) {
             GLFW.glfwMaximizeWindow(window);
         } else {
@@ -107,7 +112,6 @@ public class WindowManager {
             GLFW.glfwSetWindowPos(window, (vidMode.width() - width) / 2,
                     (vidMode.height() - height) / 2);
         }
-
         GLFW.glfwMakeContextCurrent(window);
         if (isvSync()) {
             GLFW.glfwSwapInterval(1);
@@ -115,10 +119,12 @@ public class WindowManager {
 
         GLFW.glfwShowWindow(window);
         GL.createCapabilities();
+        glEnable(GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glEnable(GL11.GL_STENCIL_TEST);
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glCullFace(GL11.GL_BACK);
+        framebuffer = new Framebuffer(getWidth(), getHeight());
 
     }
 
@@ -138,21 +144,21 @@ public class WindowManager {
 //        io.setConfigFlags(ImGuiBackendFlags.HasMouseCursors);
 //        io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
         io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
-        io.setIniFilename(null);
+
+
     }
 
 
     public void update() {
-//        glClearColor(0.1f, 0.09f, 0.1f, 1.0f);
-//        glClear(GL_COLOR_BUFFER_BIT);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        this.framebuffer.unbind();
         imGuiGlfw.newFrame();
         ImGui.newFrame();
         setupDockSpace();
-        ImGui.end();
         //place imgui stuff here
+        GameViewWindow.imgui();
         imGuiLayer.imgui();
-
-
+        ImGui.end();
         ImGui.render();
         imGuiGl3.renderDrawData(ImGui.getDrawData());
 
@@ -162,9 +168,9 @@ public class WindowManager {
             ImGui.renderPlatformWindowsDefault();
             GLFW.glfwMakeContextCurrent(backupWindowPtr);
         }
-
         GLFW.glfwSwapBuffers(window);
         GLFW.glfwPollEvents();
+        glClear(GL_COLOR_BUFFER_BIT);
 
     }
 
@@ -187,7 +193,9 @@ public class WindowManager {
 
     }
 
-
+    public static float getTargetAspectRatio(){
+        return 21.0f / 9.0f;
+    }
 
 
     public void cleanup() {
@@ -195,7 +203,7 @@ public class WindowManager {
     }
 
     public void setClearColour(float r, float g, float b, float a) {
-        GL11.glClearColor(r, g, b, a);
+        glClearColor(r, g, b, a);
     }
 
     public boolean isKeyPressed(int keycode) {
@@ -250,5 +258,9 @@ public class WindowManager {
     public Matrix4f updateProjectionMatrix(Matrix4f matrix, int width, int height) {
         float aspectRation = (float) width / height;
         return matrix.setPerspective(FOV, aspectRation, Z_NEAR, Z_FAR);
+    }
+
+    public Framebuffer getFramebuffer() {
+        return this.framebuffer;
     }
 }

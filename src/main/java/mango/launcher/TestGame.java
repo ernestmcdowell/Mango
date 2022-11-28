@@ -114,12 +114,12 @@ public class TestGame extends SceneManager implements  ILogic{
         Vector3f coneDirection = new Vector3f(45f,50f,45f);
         float cutoff = (float) Math.cos(Math.toRadians(140));
         lightIntensity = 5000f;
-        SpotLight spotLight = new SpotLight(new PointLight(new Vector3f(0f,0f,1f), new Vector3f(1f, 800f, -5f), lightIntensity, 0f,0f,.02f), coneDirection, cutoff);
+        SpotLight spotLight = new SpotLight(new PointLight(new Vector3f(0f,0f,1f), new Vector3f(1f, 80f, -5f), lightIntensity, 0f,0f,.02f), coneDirection, cutoff);
 
         coneDirection = new Vector3f(85f, 50f, 85f);
         cutoff = (float) Math.cos(Math.toRadians(140));
         lightIntensity = 5000f;
-        SpotLight spotLight1 = new SpotLight(new PointLight( new Vector3f(1f, 0f, 0f), new Vector3f(1f, 800f, -5f),
+        SpotLight spotLight1 = new SpotLight(new PointLight( new Vector3f(1f, 0f, 0f), new Vector3f(1f, 80f, -5f),
                 lightIntensity, 0f, 0f, 0.02f), coneDirection, cutoff);
 
 

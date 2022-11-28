@@ -17,8 +17,8 @@ public class Consts {
 
 
     public static final float MOUSE_SENSITIVITY = 0.1f;
-    public static final float CAMERA_STEP = 0.1f;
+    public static final float CAMERA_STEP = 0.5f;
 
     public static final Vector4f DEFAULT_COLOR = new Vector4f(1.0f, 1.0f, 1.0f, 1.0f);
-    public static final Vector3f AMBIENT_LIGHT = new Vector3f(.3f, .3f, .3f);
+    public static final Vector3f AMBIENT_LIGHT = new Vector3f(.5f, .5f, .5f);
 }

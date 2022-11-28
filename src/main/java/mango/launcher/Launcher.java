@@ -2,6 +2,7 @@ package mango.launcher;
 import mango.ImGuiLayer;
 import mango.WindowManager;
 import mango.EngineManager;
+import mango.entity.SceneManager;
 import mango.utils.Consts;
 import org.lwjgl.Version;
 public class Launcher {
@@ -9,11 +10,11 @@ public class Launcher {
     private static WindowManager window;
     private static TestGame game;
     private static ImGuiLayer imGuiLayer;
-    private static int width = 3440, height = 2160;
+    private static int width = 1920, height = 1080;
 
     public static void main(String[] args) {
         System.out.println(Version.getVersion());
-        window = new WindowManager(Consts.TITLE, width, height, false, new ImGuiLayer());
+        window = new WindowManager(Consts.TITLE, 3440, 2160, false, new ImGuiLayer());
         game =  new TestGame();
         EngineManager engine = new EngineManager();
 
@@ -33,5 +34,9 @@ public class Launcher {
 
     public static TestGame getGame() {
         return game;
+    }
+
+    public static void setGame(TestGame game) {
+        Launcher.game = game;
     }
 }

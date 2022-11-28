@@ -1,10 +1,11 @@
 package mango.entity;
 
-public class Model {
+public class Model extends Component{
 
     private int id;
     private int vertexCount;
     private Material material;
+    private boolean firstTime = false;
 
     public Model(int id, int vertexCount){
         this.id = id;
@@ -60,5 +61,18 @@ public class Model {
     public void setTexture(Texture texture, float reflectance){
         this.material.setTexture(texture);
         this.material.setReflectance(reflectance);
+    }
+
+    @Override
+    public void start(){
+        System.out.println("Model starting");
+    }
+
+    @Override
+    public void update(float dt) {
+        if(!firstTime){
+            System.out.print("Gameobject is updating");
+            firstTime = true;
+        }
     }
 }

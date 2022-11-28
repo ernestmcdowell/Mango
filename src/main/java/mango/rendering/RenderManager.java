@@ -4,6 +4,7 @@ import mango.Camera;
 import mango.ShaderManager;
 import mango.WindowManager;
 import mango.entity.Entity;
+import mango.entity.GameObject;
 import mango.entity.SceneManager;
 import mango.launcher.Launcher;
 import mango.utils.Consts;
@@ -16,10 +17,14 @@ import mango.terrain.Terrain;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+
 public class RenderManager {
     private final WindowManager window;
     private EntityRenderer entityRenderer;
     private TerrainRenderer terrainRenderer;
+    private ObjectRenderer objectRenderer;
 
     public RenderManager() {
         window = Launcher.getWindow();
@@ -27,6 +32,7 @@ public class RenderManager {
 
     public void init() throws Exception {
         entityRenderer = new EntityRenderer();
+        objectRenderer = new ObjectRenderer();
         terrainRenderer = new TerrainRenderer();
         entityRenderer.init();
         terrainRenderer.init();
@@ -64,6 +70,17 @@ public class RenderManager {
             List<Entity> newEntityList = new ArrayList<>();
             newEntityList.add(entity);
             entityRenderer.getEntities().put(entity.getModel(), newEntityList);
+        }
+    }
+
+    public void processGameObject(GameObject go){
+        List<GameObject> gameObjectList = objectRenderer.getGameObjects().get(go.getModel());
+        if(gameObjectList != null){
+            gameObjectList.add(go);
+        } else{
+            List<GameObject> newGameObjectList = new ArrayList<>();
+            newGameObjectList.add(go);
+            objectRenderer.getGameObjects().put(go.getModel(), newGameObjectList);
         }
     }
 

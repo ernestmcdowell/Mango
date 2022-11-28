@@ -1,11 +1,14 @@
 package mango.rendering;
 
-import imgui.ImGui;
 import mango.Camera;
 import mango.ShaderManager;
 import mango.entity.Entity;
+import mango.entity.GameObject;
 import mango.entity.Model;
 import mango.launcher.Launcher;
+import mango.lighting.DirectionalLight;
+import mango.lighting.PointLight;
+import mango.lighting.SpotLight;
 import mango.utils.Consts;
 import mango.utils.Transformation;
 import mango.utils.Utils;
@@ -13,21 +16,18 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import mango.lighting.DirectionalLight;
-import mango.lighting.PointLight;
-import mango.lighting.SpotLight;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EntityRenderer implements  IRenderer{
+public class ObjectRenderer implements IRenderer{
 
     ShaderManager shader;
-    private Map<Model, List<Entity>> entities;
+    private Map<Model, List<GameObject>> gameObjects;
 
-    public EntityRenderer() throws Exception{
-        entities = new HashMap<>();
+    public ObjectRenderer() throws Exception{
+        gameObjects = new HashMap<>();
         shader = new ShaderManager();
     }
 
@@ -54,16 +54,16 @@ public class EntityRenderer implements  IRenderer{
         shader.bind();
         shader.setUniform("projectionMatrix", Launcher.getWindow().updateProjectionMatrix());
         RenderManager.renderLights(pointLights, spotLights, directionalLight, shader);
-        for(Model model : entities.keySet()){
+        for(Model model : gameObjects.keySet()){
             bind(model);
-            List<Entity> entityList = entities.get(model);
-            for(Entity entity : entityList) {
-                prepare(entity, camera);
-                GL11.glDrawElements(GL11.GL_TRIANGLES, entity.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+            List<GameObject> gameObjectList = gameObjects.get(model);
+            for(GameObject gameObject : gameObjectList) {
+                prepare(gameObject, camera);
+                GL11.glDrawElements(GL11.GL_TRIANGLES, gameObject.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
             }
             unbind();
         }
-        entities.clear();
+        gameObjects.clear();
         shader.unbind();
     }
 
@@ -99,7 +99,7 @@ public class EntityRenderer implements  IRenderer{
     }
 
 
-    public Map<Model, List<Entity>> getEntities() {
-        return entities;
+    public Map<Model, List<GameObject>> getGameObjects() {
+        return gameObjects;
     }
 }

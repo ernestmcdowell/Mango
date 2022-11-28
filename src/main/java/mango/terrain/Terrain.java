@@ -24,7 +24,7 @@ public class Terrain {
         int count = VERTEX_COUNT * VERTEX_COUNT;
         float[] vertices = new float[count *3];
         float[] normals = new float[count *3];
-        float[] textureCoord = new float[count *3];
+        float[] textureCoord = new float[count * 2];
         int[] indices = new int[6 * (VERTEX_COUNT -1) *(VERTEX_COUNT - 1)];
         int vertexPointer = 0;
 

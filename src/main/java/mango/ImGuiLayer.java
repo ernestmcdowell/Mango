@@ -3,13 +3,14 @@ package mango;
 import imgui.ImGui;
 import imgui.flag.*;
 import imgui.type.ImBoolean;
+import mango.entity.Material;
 
 public class ImGuiLayer {
 
     private boolean showText = false;
 
     public void imgui() {
-        ImGui.begin("A window");
+        ImGui.begin("Project Hierarchy");
 
 
         if (ImGui.button("A button")) {
@@ -26,7 +27,9 @@ public class ImGuiLayer {
 
         ImGui.end();
 
-        ImGui.begin("Another window");
+        ImGui.begin("Asset Browser");
+
+
 
         ImGui.end();
     }

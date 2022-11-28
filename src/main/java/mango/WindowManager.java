@@ -7,6 +7,9 @@ import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.type.ImBoolean;
 import mango.editor.GameViewWindow;
+import mango.entity.Entity;
+import mango.entity.Material;
+import mango.launcher.Launcher;
 import mango.launcher.TestGame;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.Callbacks;
@@ -33,12 +36,14 @@ public class WindowManager {
     private String glslVersion = null;
 
     private final String title;
-
+    Material material;
+    TestGame game;
     private static int width, height;
     private long window;
     private boolean resize, vSync;
     private ImGuiLayer imGuiLayer;
     Framebuffer framebuffer;
+    private Entity entity;
 
     private final Matrix4f projectionmatrix;
 
@@ -48,6 +53,7 @@ public class WindowManager {
         this.height = height;
         this.vSync = vSync;
         imGuiLayer = layer;
+        this.game = Launcher.getGame();
         projectionmatrix = new Matrix4f();
     }
 
@@ -100,6 +106,7 @@ public class WindowManager {
             this.setResize(true);
         });
 
+
         GLFW.glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if (key == GLFW.GLFW_KEY_ESCAPE && action == GLFW.GLFW_RELEASE)
                 GLFW.glfwSetWindowShouldClose(window, true);
@@ -142,8 +149,9 @@ public class WindowManager {
         ImGuiIO io = ImGui.getIO();
 //        io.setConfigFlags(ImGuiConfigFlags.NavEnableKeyboard);
 //        io.setConfigFlags(ImGuiBackendFlags.HasMouseCursors);
-//        io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
         io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
+//        io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
+        io.setBackendPlatformName("imgui_java_imp_glfw");
 
 
     }
@@ -156,11 +164,16 @@ public class WindowManager {
         ImGui.newFrame();
         setupDockSpace();
         //place imgui stuff here
+        ImGui.showDemoWindow();
         GameViewWindow.imgui();
+        TestGame.sceneImgui();
+//        glViewport(0, 0, width, height);
+//        framebuffer.RescaleFramebufer(width, height);
         imGuiLayer.imgui();
         ImGui.end();
         ImGui.render();
         imGuiGl3.renderDrawData(ImGui.getDrawData());
+
 
         if (ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable)) {
             final long backupWindowPtr = org.lwjgl.glfw.GLFW.glfwGetCurrentContext();
@@ -176,7 +189,7 @@ public class WindowManager {
 
     private void setupDockSpace(){
         int windowFlags = ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoDocking;
-        ImGui.setNextWindowPos(0.0f, 0.f, ImGuiCond.Always);
+        ImGui.setNextWindowPos(0.0f, 0.0f, ImGuiCond.Always);
         ImGui.setNextWindowSize(WindowManager.getWidth(), WindowManager.getHeight());
         ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
         ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
@@ -194,7 +207,7 @@ public class WindowManager {
     }
 
     public static float getTargetAspectRatio(){
-        return 21.0f / 9.0f;
+        return 16.0f / 10.0f;
     }
 
 

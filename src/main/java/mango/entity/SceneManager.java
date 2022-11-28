@@ -14,17 +14,34 @@ public class SceneManager {
     private List<Entity> entities;
     private List<Terrain> terrains;
 
+
     private Vector3f ambientLight;
     private SpotLight[] spotLights;
     private PointLight[] pointLights;
     private DirectionalLight directionalLight;
+
+    private TestEntity testEntity;
     private float lightAngle;
     private float spotAngle = 0;
     private float spotInc = 1;
 
+    private boolean isRunning = false;
+    protected List<GameObject> gameObjects = new ArrayList<>();
+
+
+
+    public void start(){
+        for(GameObject go : gameObjects){
+            go.start();
+        }
+        isRunning = true;
+    }
+
+
     public SceneManager(float lightAngle) {
         entities = new ArrayList<>();
         terrains = new ArrayList<>();
+        gameObjects = new ArrayList<>();
         ambientLight = Consts.AMBIENT_LIGHT;
         this.lightAngle = lightAngle;
     }
@@ -99,6 +116,24 @@ public class SceneManager {
 
     public void incLightAngle(float increment){
         this.lightAngle += increment;
+    }
+
+    public List<GameObject> getGameObjects() {
+        return gameObjects;
+    }
+
+    public void setGameObjects(List<GameObject> gameObjects) {
+        this.gameObjects = gameObjects;
+    }
+
+    public void addGameObjectToScene(GameObject go){
+        this.gameObjects.add(go);
+        if(!isRunning){
+            this.gameObjects.add(go);
+        } else {
+            this.gameObjects.add(go);
+            go.start();;
+        }
     }
 
     public float getSpotAngle() {

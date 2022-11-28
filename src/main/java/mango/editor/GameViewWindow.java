@@ -5,6 +5,7 @@ import imgui.ImVec2;
 import imgui.flag.ImGuiWindowFlags;
 import mango.Framebuffer;
 import mango.WindowManager;
+import org.lwjgl.opengl.GL;
 
 public class GameViewWindow {
 
@@ -47,8 +48,8 @@ public class GameViewWindow {
         winowSize.x -= ImGui.getScrollX();
         winowSize.y -= ImGui.getScrollY();
 
-        float viewportX = (winowSize.x / 2.0f) - (aspectSize.x / 2.0f);
-        float viewportY = (winowSize.y / 2.0f) - (aspectSize.y / 2.0f);
+        float viewportX = (winowSize.x/2) - (aspectSize.x/2);
+        float viewportY = (winowSize.y/2) - (aspectSize.y/2);
 
         return new ImVec2(viewportX, viewportY);
 

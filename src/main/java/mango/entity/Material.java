@@ -1,6 +1,8 @@
 package mango.entity;
 
+import imgui.ImGui;
 import mango.utils.Consts;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 public class Material {
@@ -8,6 +10,8 @@ public class Material {
     private Vector4f ambientColor, diffuseColor, specularColor;
     private float reflectance;
     private Texture texture;
+    private boolean isDirty = false;
+
 
 
     public Material(){
@@ -31,6 +35,7 @@ public class Material {
     }
 
 
+
     public Material(Texture texture){
         this(Consts.DEFAULT_COLOR, Consts.DEFAULT_COLOR, Consts.DEFAULT_COLOR, 0, texture);
     }
@@ -42,6 +47,18 @@ public class Material {
         this.reflectance = reflectance;
         this.texture = texture;
     }
+
+
+    public void imgui(){
+        float[]  imColor = {ambientColor.x, diffuseColor.y, specularColor.z, ambientColor.w};
+        if(ImGui.colorPicker4("Color Picker", imColor)){
+            this.ambientColor.set(imColor[0],imColor[1],imColor[2],imColor[3]);
+
+        }
+
+    }
+
+
 
     public Vector4f getAmbientColor() {
         return ambientColor;
@@ -85,6 +102,16 @@ public class Material {
 
     public boolean hasTexture(){
         return texture != null;
+    }
+
+    public void setAmbientColor(float v, float v1, float v2, float v3) {
+    }
+
+    public void setAmbientColor(float v, float v1, float v2) {
+    }
+
+    public Vector4f setAmbientColor() {
+        return null;
     }
 }
 

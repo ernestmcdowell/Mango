@@ -2,14 +2,20 @@ package mango.entity;
 
 import imgui.ImGui;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
-public class Entity {
+public class Entity extends Component {
+
+    private boolean firstTime = false;
 
     private Model model;
     private Vector3f pos, rotation;
     private float scale;
+    private boolean isDirty;
+
 
     public Entity(Model model, Vector3f pos, Vector3f rotation, float scale){
         this.model = model;
@@ -43,8 +49,13 @@ public class Entity {
     }
 
 
+
     public Model getModel() {
         return model;
+    }
+
+    public Material getMaterial(){
+        return this.model.getMaterial();
     }
 
     public void setModel(Model model) {
@@ -79,6 +90,10 @@ public class Entity {
         try {
             Field[] fields = this.getClass().getDeclaredFields();
             for (Field field : fields){
+                boolean isPrivate = Modifier.isPrivate(field.getModifiers());
+                if(isPrivate){
+                    field.setAccessible(true);
+                }
                 Class type = field.getType();
                 Object value = field.get(this);
                 String name = field.getName();
@@ -90,9 +105,25 @@ public class Entity {
                         field.set(this, imInt[0]);
                     }
                 }
+                if(isPrivate){
+                    field.setAccessible(false);
+                }
             }
         } catch (IllegalAccessException e){
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void start(){
+        System.out.println("Entity starting");
+    }
+
+    @Override
+    public void update(float dt) {
+        if(!firstTime){
+            System.out.print("Entity is updating");
+            firstTime = true;
         }
     }
 }
